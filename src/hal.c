@@ -21,7 +21,7 @@
 
 void setup_led() {
   // Setup LED and turn it off
-  P1DIR |= 6; //P1.5 and P1.6 for LED3
+  P1DIR |= 0x60; //P1.5 and P1.6 for LED3
   P1_5 = 0;
   P1_6 = 0;
 }
