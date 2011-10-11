@@ -122,9 +122,9 @@ struct usb_line_coding {
 #define USB_PID 0x000A
 
 // iManufacturer
-#define USB_iManufacturer_LEN 0x10
-#define USB_iManufacturer_STRING "JobyGPS"
-#define USB_iManufacturer_UCS2 'J', 0, 'o', 0, 'b', 0, 'y', 0, 'G', 0, 'P', 0, 'S', 0
+#define USB_iManufacturer_LEN (13*2+2)
+#define USB_iManufacturer_STRING "Play Machines"
+#define USB_iManufacturer_UCS2 'P', 0, 'l', 0, 'a', 0, 'y', 0, ' ', 0, 'M', 0, 'a', 0, 'c', 0, 'h', 0, 'i', 0, 'n', 0, 'e', 0, 's', 0
 // iProduct
 #define USB_iProduct_LEN 0x1C
 #define USB_iProduct_STRING "CC Bootloader"

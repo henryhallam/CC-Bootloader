@@ -1,7 +1,7 @@
 /*
  * CC Bootloader - Hardware Abstraction Layer 
  *
- * Fergus Noble (c) 2011
+ * Fergus Noble, Henry Hallam (c) 2011
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,16 +21,17 @@
 
 void setup_led() {
   // Setup LED and turn it off
-  P1DIR |= 2;
-  P1_1 = 0;
+  P1DIR |= 6; //P1.5 and P1.6 for LED3
+  P1_5 = 0;
+  P1_6 = 0;
 }
 
 void led_on() {
-  P1_1 = 1;
+  P1_6 = 1;
 }
 
 void led_off() {
-  P1_1 = 0;
+  P1_6 = 0;
 }
 
 void usb_up() {
