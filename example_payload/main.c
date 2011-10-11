@@ -35,12 +35,15 @@ void delay (unsigned char n) {
 void main()
 {  
   // Setup LED and turn it off
-  P1DIR |= 2;
-  P1_1 = 0;
-  
+  P1DIR |= 0x74;
+  P1_2 = 1;
+  P1_4 = 0;
+  P1_5 = 0;
+  P1_6 = 1;
+
   while (1) 
   {
-    P1_1 ^= 1;
+    P1 ^= 0x74;
     delay(3);
 	}
 }
