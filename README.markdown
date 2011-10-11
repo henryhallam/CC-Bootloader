@@ -56,7 +56,7 @@ from the root directory of the project.
 Build Options
 -------------
 
-The only option that can currently be enabled or disabled is weather to start
+The only option that can currently be enabled or disabled is whether to start
 running the user payload code after a certain timeout with no command issued 
 over USB. Once a USB command is issued this timeout will be canceled and a
 command must be issued to explicitly start the user code. This option is 
