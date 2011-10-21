@@ -32,7 +32,7 @@ __interrupt_vect:
 	.ds	5
 	ljmp #(0x1400+0x43)
 	.ds	5
-	ljmp _timer1_isr_forward ; defined in main.c
+	ljmp #(0x1400+0x4B)
 	.ds	5
 	ljmp #(0x1400+0x53)
 	.ds	5
@@ -52,15 +52,19 @@ __interrupt_vect:
 	.ds	5
 	
 usb_isr_forward:
-	push acc
-	mov	a, _bootloader_running
-	jnz	usb_isr_forward_bootloader
-	; Bootloader not running, jump into the payload ISR
-	pop acc
-	ljmp #(0x1400+0x33)
-usb_isr_forward_bootloader:
-	pop acc
-	ljmp	_usb_isr
+	ljmp _usb_isr
+; -- Commented code below was part of a somewhat-misguided attempt to allow
+;    use of USB in the application.
+;
+;  push acc
+;	mov	a, _bootloader_running
+;	jnz	usb_isr_forward_bootloader
+;	 Bootloader not running, jump into the payload ISR
+;	pop acc
+;	ljmp #(0x1400+0x33)
+;usb_isr_forward_bootloader:
+;	pop acc
+;	ljmp	_usb_isr
 	
 ;--------------------------------------------------------
 ; external initialized ram data

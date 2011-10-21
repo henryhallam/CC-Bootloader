@@ -65,7 +65,7 @@ void to_hex8_ascii(char buff[], uint8_t x);
 void to_hex16_ascii(char buff[], uint16_t x);
 
 uint8_t ihx_check_line(char line[]);
-void ihx_readline(char line[]);
+void ihx_readline(char line[], void (*while_u_wait)(void));
 void ihx_write(char line[]);
 uint8_t ihx_record_type(char line[]);
 uint16_t ihx_record_address(char line[]);

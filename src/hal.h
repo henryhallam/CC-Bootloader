@@ -21,10 +21,11 @@
 #define _HAL_H_
 
 void setup_led();
-void led_on();
-void led_off();
+void leds_set(char a, char b);
 
-void usb_up();
-void usb_down();
+void usb_pullup_disable();
+void usb_pullup_enable();
+
+char usb_power_detect();
 
 #endif // _HAL_H_

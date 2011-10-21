@@ -95,17 +95,17 @@ uint8_t ihx_check_line(char line[]) {
   return IHX_OK;
 }
 
-void ihx_readline(char line[]) {
+void ihx_readline(char line[], void (*while_u_wait)(void)) {
   char c;
   uint8_t len;
   
   // Wait for start of record
-  while (usb_getchar() != ':') {}
+  while (usb_getchar(while_u_wait) != ':') {}
   line[0] = ':';
   
   // Read until newline
   len = 1;
-  while (len < (IHX_MAX_LEN*2)+13 && (c = usb_getchar()) != '\n') {
+  while (len < (IHX_MAX_LEN*2)+13 && (c = usb_getchar(while_u_wait)) != '\n') {
     line[len++] = c;
   }
   line[len+1] = 0;

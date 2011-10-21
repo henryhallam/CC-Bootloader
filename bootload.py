@@ -170,6 +170,7 @@ if __name__ == '__main__':
     else:
       print_usage()
   finally:
+    serial_port.flush()
     serial_port.close()
 
 

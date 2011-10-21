@@ -1,7 +1,7 @@
 /*
  * CC Bootloader - Main 
  *
- * Fergus Noble (c) 2011
+ * Fergus Noble, Henry Hallam (c) 2011
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,6 @@
 #include "hal.h"
 #include "flash.h"
 #include "intel_hex.h"
-
-uint8_t bootloader_running = 1;
 
 void clock_init()
 {
@@ -67,16 +65,18 @@ uint8_t check_for_payload() {
 }
 
 void jump_to_user() {
+  leds_set(1,1);
   // Disable all interrupts
   EA = 0;
   IEN0 = IEN1 = IEN2 = 0;
   
   // Bring down the USB link
-  usb_down();
-  
-  // Flag bootloader not running
-  bootloader_running = 0;
-  
+  delay(1); 
+  usb_disable();
+  delay(1);
+  usb_pullup_disable();
+  delay(1);
+
   if (check_for_payload()) {
     // Jump to user code
     __asm
@@ -85,7 +85,7 @@ void jump_to_user() {
     while (1) {}
   } else {
     // Oops, no payload. We're stuck now!
-    led_on();
+    leds_set(2,2);
     while (1) {}
   }
 }
@@ -97,7 +97,7 @@ void setup_timer1() {
   T1CTL &= ~T1CTL_OVFIF;
   
   // Enable Timer 1 interrupts by setting [IEN1.T1IE=1]
-  IEN1 |= IEN1_T1IE;
+//  IEN1 |= IEN1_T1IE;
   
   T1CC0H = TIMER_TIMEOUT;
   T1CC0L = 0x00;
@@ -107,6 +107,15 @@ void setup_timer1() {
 }
 #endif
 
+void poll_timer1() {
+#ifdef TIMER
+  if (T1CTL & T1CTL_OVFIF)
+    jump_to_user();
+#endif
+}
+
+
+/*
 #ifdef TIMER
 void disable_timer1() {
   // Disable Timer 1 interrupt
@@ -160,20 +169,17 @@ void timer1_isr_forward() __naked {
   __endasm;  
   #endif
 }
+*/
+
 
 uint8_t want_bootloader() {
   // Check if we want to the bootloader to run
   // Here is the place to check for things like USB power and jump straight to
   // user code under some conditions.
   
-  /*
   // Check for USB +5V, if not present go straight to user code
-  PxDIR &= ~y;
-  if (!Px_y)
-    return 0;
-  */
-  
-  return 1;
+
+  return usb_power_detect();
 }
 
 void bootloader_main ()
@@ -188,7 +194,8 @@ void bootloader_main ()
   clock_init();
   
   setup_led();
-  
+  leds_set(1,0);
+
   // Setup timer if enabled
   #ifdef TIMER
   setup_timer1();
@@ -198,17 +205,19 @@ void bootloader_main ()
   
   // Enable interrupts
 	EA = 1;
-  
+  leds_set(1,1);
+
   // Bring up the USB link
-  usb_up();
-  
+  usb_pullup_enable();
+  leds_set(1,2);
+
   while (1) 
   {
-    ihx_readline(buff);
+    ihx_readline(buff, &poll_timer1);
     
     // Got something over USB, disable the timer
     #ifdef TIMER
-    disable_timer1();
+    //disable_timer1();
     #endif
     
     ihx_status = ihx_check_line(buff);
@@ -260,5 +269,6 @@ void bootloader_main ()
       usb_putchar(ihx_status + '0');
       usb_flush();
     }
-	}
+  }
 }
+

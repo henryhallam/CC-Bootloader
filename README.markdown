@@ -43,6 +43,19 @@ This is the relevant line:
 
 `LDFLAGS_FLASH = ... --code-loc 0x1400 ...`
 
+Known issues
+------------
+Interrupts in the user application:
+The CPU vectors to the interrupt table at 0x0003 in the bootloader code.  Here
+we just jump to the appropriate entry in a "shadow" interrupt vector table in
+the user application.  This introduces a very small additional latency
+(couple CPU cycles).
+
+USB interrupts are currently not supported in the user application.  If you want
+to use USB in the user app, look at start.asm and figure out a way to forward
+the interrupt call to the user ISR only when the bootloader is not running.
+
+
 Building
 --------
 

@@ -26,12 +26,12 @@
 void usb_init();
 void usb_disable();
 void usb_enable();
-char usb_getchar();
+char usb_getchar(void (*while_u_wait)(void));
 void usb_putchar(char c);
 void usb_flush();
 
 void usb_putstr(char* buff);
-void usb_readline(char* buff);
+void usb_readline(char* buff, void (*while_u_wait)(void));
 
 // End external interface
 

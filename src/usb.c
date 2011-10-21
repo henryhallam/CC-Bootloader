@@ -368,12 +368,15 @@ char usb_pollchar()
   return c;
 }
 
-char usb_getchar()
-{
+char usb_getchar(void (*while_u_wait)(void))
+{ // Argument is a function pointer that, if not null, will be called while polling
   char c;
   while ((c = usb_pollchar()) == USB_READ_AGAIN)
   {
-    while (!(USBOIF & (1 << USB_OUT_EP))) {}
+    while (!(USBOIF & (1 << USB_OUT_EP))) {
+    if (while_u_wait)
+      (*while_u_wait)();
+    }
   }
   return c;
 }
@@ -421,9 +424,9 @@ void usb_init()
 	usb_enable();
 }
 
-void usb_readline(char* buff) {
+void usb_readline(char* buff, void (*while_u_wait)(void)) {
   char c;
-  while ((c = usb_getchar()) != '\n') {
+  while ((c = usb_getchar(while_u_wait)) != '\n') {
     *buff++ = c;
   }
   *buff = 0;

@@ -33,10 +33,10 @@
 
 // If TIMER is enabled then the bootloader will jump to user code after
 // a period of time if there has been no activity on the USB interface.
-//#define TIMER
+#define TIMER
 // TIMER_TIMEOUT sets the period of the timer timeout in units of
 // approximately 43.7 milliseconds.
-#define TIMER_TIMEOUT 229 // 10s timeout
+#define TIMER_TIMEOUT 68 // 3s timeout
 
 // Useful for printf etc. but uses a bunch of code space
 //#define STDIO
@@ -49,6 +49,5 @@
 
 #define nop()	__asm nop __endasm;
 
-extern uint8_t bootloader_running;
-
 #endif // _MAIN_H_
+
